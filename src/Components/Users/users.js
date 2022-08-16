@@ -6,7 +6,12 @@ import Spinner from "../Commons/Spinner";
 class Users extends React.Component {
   constructor() {
     super();
-    this.state = { isLoading: true, usersData: [], searchValue: "" };
+    this.state = {
+      isLoading: true,
+      usersData: [],
+      searchValue: "",
+      completeData: [],
+    };
   }
 
   componentDidMount() {
@@ -17,12 +22,22 @@ class Users extends React.Component {
     })
       .then((data) => data.json())
       .then((data) => {
-        this.setState({ isLoading: false, usersData: data.data });
+        this.setState({
+          isLoading: false,
+          usersData: data.data,
+        });
+        this.completeData = data.data;
       });
   }
 
   onInputChange(e) {
-    this.setState({ searchValue: e.target.value });
+    const value = e.target.value.toLowerCase();
+    this.setState({ searchValue: value });
+
+    const filteredData = this.completeData.filter((user) => {
+      return user.firstName.toLowerCase().startsWith(value);
+    });
+    this.setState({ usersData: filteredData });
   }
 
   showSpinner() {
