@@ -2,29 +2,25 @@ import logo from "./logo.svg";
 import "./App.css";
 import Users from "./Components/Users/users";
 import LoginForm from "./Components/loginForm/loginForm";
-import React from "react";
+import React, { useState } from "react";
+import User from "./Components/User/user";
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = { isLoggedIn: false };
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  function onLoginSuccessful() {
+    setIsLoggedIn(true);
   }
 
-  onLoginSuccessful() {
-    this.setState({ isLoggedIn: true });
-  }
-
-  render() {
-    return (
-      <div className="App">
-        {this.state.isLoggedIn ? (
-          <Users />
-        ) : (
-          <LoginForm onLoginSuccessful={this.onLoginSuccessful.bind(this)} />
-        )}
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      {isLoggedIn ? (
+        <Users />
+      ) : (
+        <LoginForm onLoginSuccessful={onLoginSuccessful()} />
+      )}
+    </div>
+  );
 }
 
 export default App;

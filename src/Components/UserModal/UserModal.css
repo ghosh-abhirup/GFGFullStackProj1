@@ -1,0 +1,25 @@
+.userModal{
+    border: 2px solid black;
+    height: 50vh;
+    width: 80vw;
+    z-index: 200;
+    background-color: rgba(1, 1, 1, 0.9);
+    color: white;
+    z-index: 999;
+    position: fixed;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+}
+
+.userModalBody{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 20px;
+}
+
+.userModalBody img{
+    height: 200px;
+    width: 200px;
+}

@@ -2,6 +2,7 @@ import React from "react";
 import User from "../User/user";
 import "./users.css";
 import Spinner from "../Commons/Spinner";
+import UserModal from "../UserModal/UserModal";
 
 class Users extends React.Component {
   constructor() {
@@ -11,6 +12,7 @@ class Users extends React.Component {
       usersData: [],
       searchValue: "",
       completeData: [],
+      isModalOpen: false,
     };
   }
 
@@ -54,11 +56,20 @@ class Users extends React.Component {
         />
         <div className="usersDiv">
           {this.state.usersData.map((person) => {
-            return <User data={person} />;
+            return <User data={person} openModal={this.openModal.bind(this)} />;
           })}
         </div>
       </div>
     );
+  }
+
+  openModal(id) {
+    this.id = id;
+    this.setState({ isModalOpen: true });
+  }
+
+  closeModal() {
+    this.setState({ isModalOpen: false });
   }
 
   render() {
@@ -66,6 +77,9 @@ class Users extends React.Component {
       <div>
         <h1>Employee List</h1>
         {this.state.isLoading ? this.showSpinner() : this.showUser()}
+        {this.state.isModalOpen && (
+          <UserModal id={this.id} closeModal={this.closeModal.bind(this)} />
+        )}
       </div>
     );
   }

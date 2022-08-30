@@ -4,6 +4,12 @@ import "./user.css";
 
 function User(props) {
   const data = props.data;
+  const openModal = props.openModal;
+
+  function onDetailsClick() {
+    openModal(data.id);
+  }
+
   return (
     <Card className="userCard">
       <Card.Img variant="top" src={data.picture} />
@@ -13,7 +19,9 @@ function User(props) {
           Some quick example text to build on the card title and make up the
           bulk of the card's content.
         </Card.Text>
-        <Button variant="primary">Go somewhere</Button>
+        <Button variant="primary" onClick={onDetailsClick}>
+          See Details
+        </Button>
       </Card.Body>
     </Card>
   );
