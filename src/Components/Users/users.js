@@ -1,22 +1,19 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import User from "../User/user";
 import "./users.css";
 import Spinner from "../Commons/Spinner";
 import UserModal from "../UserModal/UserModal";
 
-class Users extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      isLoading: true,
-      usersData: [],
-      searchValue: "",
-      completeData: [],
-      isModalOpen: false,
-    };
-  }
+function Users() {
+  var completeData = useRef(null);
+  var id = useRef(null);
 
-  componentDidMount() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [usersData, setUsersData] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
     fetch("https://dummyapi.io/data/v1/user", {
       headers: {
         "app-id": "62f7889bc62f3151ed9c2de6",
@@ -24,65 +21,59 @@ class Users extends React.Component {
     })
       .then((data) => data.json())
       .then((data) => {
-        this.setState({
-          isLoading: false,
-          usersData: data.data,
-        });
-        this.completeData = data.data;
+        setIsLoading(false);
+        setUsersData(data.data);
+        completeData.current = data.data;
       });
-  }
+  }, []);
 
-  onInputChange(e) {
+  function onInputChange(e) {
     const value = e.target.value.toLowerCase();
-    this.setState({ searchValue: value });
+    setSearchValue(value);
 
-    const filteredData = this.completeData.filter((user) => {
+    const filteredData = completeData.current.filter((user) => {
       return user.firstName.toLowerCase().startsWith(value);
     });
-    this.setState({ usersData: filteredData });
+    setUsersData(filteredData);
   }
 
-  showSpinner() {
+  function showSpinner() {
     return <Spinner />;
   }
 
-  showUser() {
+  function showUser() {
     return (
       <div>
         <input
-          onChange={(e) => this.onInputChange(e)}
-          value={this.state.searchValue}
+          onChange={(e) => onInputChange(e)}
+          value={searchValue}
           type="text"
         />
         <div className="usersDiv">
-          {this.state.usersData.map((person) => {
-            return <User data={person} openModal={this.openModal.bind(this)} />;
+          {usersData.map((person) => {
+            return <User data={person} openModal={openModal} />;
           })}
         </div>
       </div>
     );
   }
 
-  openModal(id) {
-    this.id = id;
-    this.setState({ isModalOpen: true });
+  function openModal(id_) {
+    id.current = id_;
+    setIsModalOpen(true);
   }
 
-  closeModal() {
-    this.setState({ isModalOpen: false });
+  function closeModal() {
+    setIsModalOpen(false);
   }
 
-  render() {
-    return (
-      <div>
-        <h1>Employee List</h1>
-        {this.state.isLoading ? this.showSpinner() : this.showUser()}
-        {this.state.isModalOpen && (
-          <UserModal id={this.id} closeModal={this.closeModal.bind(this)} />
-        )}
-      </div>
-    );
-  }
+  return (
+    <div>
+      <h1>Employee List</h1>
+      {isLoading ? showSpinner() : showUser()}
+      {isModalOpen && <UserModal id={id.current} closeModal={closeModal} />}
+    </div>
+  );
 }
 
 export default Users;

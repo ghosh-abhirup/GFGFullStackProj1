@@ -17,7 +17,7 @@ function App() {
       {isLoggedIn ? (
         <Users />
       ) : (
-        <LoginForm onLoginSuccessful={onLoginSuccessful()} />
+        <LoginForm onLoginSuccessful={onLoginSuccessful} />
       )}
     </div>
   );
